@@ -105,18 +105,25 @@ Open `.env` and fill in your values:
 | `HIGH_RISK_IMMEDIATE_ALERT` | `true` to get instant alerts for high-risk videos |
 | `MAX_VIDEOS_PER_RUN` | How many videos to pull per run (default: 200) |
 
-### 6. Initialize the database and run a test
+### 6. Verify your setup
 
 ```bash
-python db.py        # Creates the SQLite database
-python main.py      # Runs a full collection + analysis + email
+python check.py
 ```
 
-The first run will pull and analyze up to `MAX_VIDEOS_PER_RUN` videos from watch history. Subsequent runs only process new videos.
+This checks Python version, installed packages, `.env` config, cookies file, ffmpeg, and makes one small test call to the Gemini API. Fix any failures before proceeding.
+
+### 7. Run it
+
+```bash
+python main.py
+```
+
+The first run pulls and analyzes up to `MAX_VIDEOS_PER_RUN` videos from watch history. Subsequent runs only process new videos.
 
 Check your inbox — you should receive an email report.
 
-### 7. Schedule daily runs
+### 8. Schedule daily runs
 
 #### Windows (Task Scheduler)
 
@@ -165,12 +172,13 @@ High-risk videos trigger an immediate alert email in addition to the daily repor
 
 The code includes support for running as a Google Cloud Function (see [CLOUD_SETUP_AND_NOTES.md](CLOUD_SETUP_AND_NOTES.md)), but **it doesn't work well in practice** for the same reason as above: GCP IP addresses are blocked by YouTube, so neither transcript fetching nor audio download will work from the cloud. History collection still works, but you'd be classifying everything by title alone — which defeats the purpose.
 
-**Recommendation: run it locally.** Windows Task Scheduler with `StartWhenAvailable` (see setup step 7) means it runs every morning as long as your computer turns on at some point during the day.
+**Recommendation: run it locally.** Windows Task Scheduler with `StartWhenAvailable` (see setup step 8) means it runs every morning as long as your computer turns on at some point during the day.
 
 ## Project Structure
 
 | File | Purpose |
 |---|---|
+| `check.py` | Setup validator — run this before your first `main.py` |
 | `main.py` | Entry point — orchestrates the full pipeline |
 | `collector.py` | Fetches YouTube watch history via InnerTube API |
 | `enricher.py` | Downloads captions or audio for each video |

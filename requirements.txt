@@ -1,8 +1,11 @@
-functions-framework==3.*
-google-cloud-storage==2.*
-google-cloud-secret-manager==2.*
+# Core — required for local and cloud use
 google-genai>=1.65.0
 python-dotenv>=1.0.0
 requests>=2.31.0
 youtube-transcript-api>=1.2.0
 yt-dlp>=2024.0.0
+functions-framework==3.*
+
+# Cloud deployment only — not needed if running locally
+google-cloud-storage==2.*
+google-cloud-secret-manager==2.*
