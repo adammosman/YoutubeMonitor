@@ -7,6 +7,10 @@ It also makes one small test call to Gemini to confirm your API key works.
 """
 
 import sys
+try:
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+except AttributeError:
+    pass
 import os
 import shutil
 
@@ -19,6 +23,10 @@ REQUIRED_PACKAGES = [
     ("youtube_transcript_api","youtube-transcript-api"),
     ("yt_dlp",                "yt-dlp"),
     ("functions_framework",   "functions-framework"),
+]
+
+OPTIONAL_PACKAGES = [
+    ("playwright",            "playwright",        "Required only for YouTube Kids monitoring"),
 ]
 
 REQUIRED_ENV_VARS = [
@@ -65,6 +73,53 @@ def main():
         except ImportError:
             check(pip_name, False, "Run: pip install -r requirements.txt")
             packages_ok = False
+
+    # ── Optional packages ─────────────────────────────────────────────────────
+    monitor_kids = os.environ.get("MONITOR_YOUTUBE_KIDS", "").lower() == "true"
+    if monitor_kids:
+        print("\nOptional Packages (YouTube Kids)")
+        for import_name, pip_name, note in OPTIONAL_PACKAGES:
+            try:
+                __import__(import_name)
+                check(pip_name, True)
+            except ImportError:
+                check(pip_name, False,
+                      f"Run: pip install {pip_name} && playwright install chromium")
+
+        # Check Playwright browsers are installed
+        try:
+            from playwright.sync_api import sync_playwright
+            with sync_playwright() as pw:
+                try:
+                    b = pw.chromium.launch()
+                    b.close()
+                    check("Playwright Chromium browser", True)
+                except Exception as e:
+                    check("Playwright Chromium browser", False,
+                          "Run: playwright install chromium")
+        except Exception:
+            pass
+
+        # Check YouTube Kids setup profile
+        HERE_PATH = os.path.dirname(os.path.abspath(__file__))
+        sentinel = os.path.join(HERE_PATH, "ytk_browser_profile", ".setup_complete")
+        if os.path.exists(sentinel):
+            check("YouTube Kids browser profile", True)
+        else:
+            kids_cookies = os.path.join(HERE_PATH, "www.youtubekids.com_cookies.json")
+            if os.path.exists(kids_cookies):
+                check(
+                    "YouTube Kids browser profile",
+                    False,
+                    "Run:  python kids_collector.py --setup  (one-time parent setup)",
+                )
+            else:
+                check(
+                    "YouTube Kids cookies file",
+                    False,
+                    "Export cookies from www.youtubekids.com using Cookie-Editor "
+                    "and save as www.youtubekids.com_cookies.json",
+                )
 
     # ── .env and required keys ────────────────────────────────────────────────
     print("\nConfiguration")

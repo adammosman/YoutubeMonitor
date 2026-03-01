@@ -7,6 +7,9 @@ cookies.json
 # Database
 *.db
 
+# YouTube Kids Playwright browser profile (contains saved session state)
+ytk_browser_profile/
+
 # Generated output
 logs/
 temp_audio/

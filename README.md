@@ -104,6 +104,7 @@ Open `.env` and fill in your values:
 | `BROWSER` | `chrome` or `firefox` |
 | `HIGH_RISK_IMMEDIATE_ALERT` | `true` to get instant alerts for high-risk videos |
 | `MAX_VIDEOS_PER_RUN` | How many videos to pull per run (default: 200) |
+| `MONITOR_YOUTUBE_KIDS` | `true` to also monitor YouTube Kids watch history (see below) |
 
 ### 6. Verify your setup
 
@@ -149,6 +150,44 @@ Add this line (update paths):
 0 4 * * * /path/to/venv/bin/python /path/to/youtube-monitor/main.py >> /path/to/youtube-monitor/logs/cron.log 2>&1
 ```
 
+## YouTube Kids Monitoring (Optional)
+
+If your children also use YouTube Kids, the tool can monitor that watch history too. It requires a one-time browser setup because YouTube Kids uses a parental gate that needs a parent to complete it the first time.
+
+### Setup
+
+#### 1. Install Playwright
+
+```bash
+pip install playwright
+playwright install chromium
+```
+
+#### 2. Export YouTube Kids cookies
+
+1. Open Chrome or Firefox and go to [www.youtubekids.com](https://www.youtubekids.com)
+2. Make sure the child's account is logged in
+3. Click the Cookie-Editor extension icon → **Export** → **Export as JSON**
+4. Save as `www.youtubekids.com_cookies.json` in the project folder
+
+#### 3. Run one-time browser setup
+
+```bash
+python kids_collector.py --setup
+```
+
+A browser window will open. If you see a "Set up YouTube Kids" or parental gate screen, complete it. Once your child's Watch Again history is visible, come back to the terminal and press Enter. The browser session is saved — this step only needs to happen once.
+
+#### 4. Enable in .env
+
+```
+MONITOR_YOUTUBE_KIDS=true
+```
+
+From now on, `main.py` will collect from both YouTube and YouTube Kids on every run.
+
+> **Cookie expiry:** YouTube Kids cookies expire like regular YouTube cookies. If history stops being fetched, re-export `www.youtubekids.com_cookies.json` and re-run `--setup`.
+
 ## Risk Classification
 
 The AI uses Google Gemini 2.5 Flash with Islamic sensibilities. The key principle is **depiction ≠ endorsement** — a video that *features* something bad is not the same as a video that *glorifies* it.
@@ -181,6 +220,7 @@ The code includes support for running as a Google Cloud Function (see [CLOUD_SET
 | `check.py` | Setup validator — run this before your first `main.py` |
 | `main.py` | Entry point — orchestrates the full pipeline |
 | `collector.py` | Fetches YouTube watch history via InnerTube API |
+| `kids_collector.py` | Fetches YouTube Kids watch history via Playwright + InnerTube |
 | `enricher.py` | Downloads captions or audio for each video |
 | `classifier.py` | Sends content to Gemini for risk analysis |
 | `reporter.py` | Builds the HTML email report |

@@ -73,11 +73,28 @@ def main():
             return
             
         new_videos = collection_result["videos"]
+
+        # Optional: also collect from YouTube Kids
+        if config.get("MONITOR_YOUTUBE_KIDS", "false").lower() == "true":
+            try:
+                import kids_collector
+                if kids_collector.is_setup_complete():
+                    kids_result = kids_collector.run_kids_collection(max_videos)
+                    if kids_result.get("videos"):
+                        print(f"\n[YouTube Kids] Adding {len(kids_result['videos'])} new videos to queue.")
+                        new_videos.extend(kids_result["videos"])
+                    elif kids_result.get("error") == "kids_not_setup":
+                        print("[YouTube Kids] Not set up — run:  python kids_collector.py --setup")
+                else:
+                    print("[YouTube Kids] Profile not set up — run:  python kids_collector.py --setup")
+            except ImportError:
+                print("[YouTube Kids] Playwright not installed — run:  pip install playwright && playwright install chromium")
+
         if not new_videos:
             print("No new videos found. Exiting.")
             db.finish_run(run_id, "success", 0)
             return
-        
+
     # 3 & 4. Sequence Processing (Enrich + Classify safely within Cloud limits)
     print("\n--- PHASE 2 & 3: Enrichment & Classification ---")
     analyzed_videos = []

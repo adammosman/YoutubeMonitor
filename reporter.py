@@ -38,7 +38,7 @@ def render_video_block(v):
     <div style="border-left: 4px solid {color}; padding-left: 15px; margin-bottom: 20px; background-color: #f9f9f9; padding: 10px;">
         <h3 style="margin-top: 0;">{icon} <a href="{v['url']}" style="color: #333; text-decoration: none;">{v['title']}</a></h3>
         <p style="color: #666; font-size: 0.9em; margin-bottom: 5px;">
-            Channel: <b>{v['channel']}</b> | Watched: <b>{watched_str}</b> | Risk: <b>{risk.upper()}</b>
+            Channel: <b>{v['channel']}</b> | Watched: <b>{watched_str}</b> | Risk: <b>{risk.upper()}</b>{"&nbsp; <span style='background:#4285f4;color:white;font-size:0.75em;padding:1px 5px;border-radius:3px;'>YT Kids</span>" if v.get('source') == 'youtube_kids' else ''}
         </p>
         <p style="color: #666; font-size: 0.9em; margin-bottom: 5px;">Categories: <b>{categories}</b></p>
         <p>{v.get('summary', 'No summary available.')}{analysis_note}</p>
