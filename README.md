@@ -181,6 +181,18 @@ It is possible to run this as a Google Cloud Function triggered by Cloud Schedul
 | `db.py` | SQLite database (deduplication + run history) |
 | `config.py` | Reads config from `.env` or Secret Manager |
 
+## Feedback & Community
+
+If you set this up, I'd love to hear how it went — what worked, what didn't, what you'd change.
+
+**[Start a Discussion →](../../discussions)**
+
+- Got it running? Share your setup in **Show and Tell**
+- Something broken? Open an **Issue**
+- Want a feature? Start a **Discussion** under Ideas
+
+A ⭐ on the repo is also a simple way to let me know it was useful.
+
 ## License
 
-MIT
+MIT — do whatever you want with it.
