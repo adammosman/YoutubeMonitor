@@ -4,7 +4,6 @@ A tool that automatically monitors a YouTube account's watch history and emails 
 
 Built for parents who want to stay informed about what their children are watching — without manually reviewing every video.
 
-![Report example showing risk breakdown with High/Medium/Low counts and per-video summaries](https://via.placeholder.com/800x400?text=Daily+Report+Example)
 
 ## Features
 
@@ -185,7 +184,7 @@ The code includes support for running as a Google Cloud Function (see [CLOUD_SET
 
 If you set this up, I'd love to hear how it went — what worked, what didn't, what you'd change.
 
-**[Start a Discussion →](../../discussions)**
+**[Start a Discussion →](https://github.com/adammosman/YoutubeMonitor/discussions)**
 
 - Got it running? Share your setup in **Show and Tell**
 - Something broken? Open an **Issue**

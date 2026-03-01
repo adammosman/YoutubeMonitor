@@ -125,18 +125,3 @@ def enrich_videos(videos):
         
     return enriched
 
-if __name__ == "__main__":
-    # Test with a known video ID
-    db.init_db()
-    db.insert_video("dQw4w9WgXcQ", "Rick Astley - Never Gonna Give You Up", "Rick Astley", "https://youtube.com/watch?v=dQw4w9WgXcQ")
-    
-    test_video = [{
-        "video_id": "dQw4w9WgXcQ", 
-        "title": "Rick Astley - Never Gonna Give You Up", 
-        "channel": "Rick Astley", 
-        "url": "https://youtube.com/watch?v=dQw4w9WgXcQ"
-    }]
-    
-    res = enrich_videos(test_video)
-    print(f"Status: {res[0]['transcript_status']}")
-    print(f"Audio Path: {res[0].get('audio_path')}")
