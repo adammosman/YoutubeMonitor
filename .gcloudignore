@@ -1,0 +1,8 @@
+# Ignore everything that doesn't belong in the Cloud Function
+venv/
+__pycache__/
+*.db
+*.json
+.env
+logs/
+temp_audio/

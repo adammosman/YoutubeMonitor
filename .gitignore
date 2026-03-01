@@ -1,0 +1,23 @@
+# Secrets and credentials — NEVER commit these
+.env
+www.youtube.com_cookies.json
+/tmp/youtube_cookies.txt
+
+# Database
+*.db
+
+# Generated output
+logs/
+temp_audio/
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+*.code-workspace
+.vscode/
