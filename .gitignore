@@ -1,6 +1,7 @@
 # Secrets and credentials — NEVER commit these
 .env
-www.youtube.com_cookies.json
+*_cookies.json
+cookies.json
 /tmp/youtube_cookies.txt
 
 # Database

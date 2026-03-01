@@ -37,7 +37,7 @@ def get_youtube_cookies(browser_name="chrome"):
         try:
             from google.cloud import secretmanager
             client = secretmanager.SecretManagerServiceClient()
-            project_id = os.environ.get("GCP_PROJECT", "youtube-monitor-488819")
+            project_id = os.environ.get("GCP_PROJECT")
             secret_name = f"projects/{project_id}/secrets/youtube-cookies/versions/latest"
             response = client.access_secret_version(name=secret_name)
             cookie_data = json.loads(response.payload.data.decode("UTF-8"))

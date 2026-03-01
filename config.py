@@ -12,7 +12,7 @@ def _load_cloud_secret(key):
     try:
         from google.cloud import secretmanager
         client = secretmanager.SecretManagerServiceClient()
-        project_id = os.environ.get("GCP_PROJECT", "youtube-monitor-488819")
+        project_id = os.environ.get("GCP_PROJECT")
         name = f"projects/{project_id}/secrets/{key}/versions/latest"
         response = client.access_secret_version(name=name)
         value = response.payload.data.decode("UTF-8")
