@@ -157,16 +157,16 @@ High-risk videos trigger an immediate alert email in addition to the daily repor
 
 ## Limitations
 
-- **Transcripts blocked from cloud IPs** — YouTube blocks transcript and audio downloads from datacenter IPs (AWS, GCP, Azure). This tool is designed to run locally on a home machine for that reason.
-- **YouTube cookies expire** — typically every 2–4 months. When history stops being fetched, re-export your cookies.
+- **Must run locally** — YouTube blocks transcript and audio downloads from datacenter IPs (AWS, GCP, Azure). This is not a bug or a fixable limitation; it's YouTube's deliberate policy. The tool only works reliably when run on a home machine with a residential IP address.
+- **YouTube cookies expire** — typically every 2–4 months. When history stops being fetched, re-export your cookies using the Cookie-Editor extension.
 - **Gemini free tier rate limit** — 15 requests/minute. The tool adds a 4.2-second delay between videos. A run with 100 new videos takes ~7 minutes.
-- **Private/deleted videos** — videos that have been deleted or made private after being watched will be analyzed by title only.
+- **Private/deleted videos** — videos deleted or made private after being watched will be analyzed by title only, with lower confidence.
 
-## Optional: Google Cloud Deployment
+## What About Google Cloud?
 
-It is possible to run this as a Google Cloud Function triggered by Cloud Scheduler. See [CLOUD_SETUP_AND_NOTES.md](CLOUD_SETUP_AND_NOTES.md) for full instructions.
+The code includes support for running as a Google Cloud Function (see [CLOUD_SETUP_AND_NOTES.md](CLOUD_SETUP_AND_NOTES.md)), but **it doesn't work well in practice** for the same reason as above: GCP IP addresses are blocked by YouTube, so neither transcript fetching nor audio download will work from the cloud. History collection still works, but you'd be classifying everything by title alone — which defeats the purpose.
 
-> **Caveat:** YouTube actively blocks transcript and audio downloads from GCP IP addresses, so audio-based content analysis will not work in the cloud. Cloud deployment is only viable if transcript-based analysis (for channels that provide captions) is sufficient for your needs.
+**Recommendation: run it locally.** Windows Task Scheduler with `StartWhenAvailable` (see setup step 7) means it runs every morning as long as your computer turns on at some point during the day.
 
 ## Project Structure
 
